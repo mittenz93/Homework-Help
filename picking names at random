@@ -1,0 +1,126 @@
+//pickawinner.cpp -- Picking random names out of array
+//Amit Nand -- February 29, 2016
+//CISP 360
+
+#include <iostream>
+#include <string>
+#include <stdlib.h>
+#include <fstream>
+#include <vector>
+
+using namespace std;
+
+//Global variables for strings
+string userName;
+string firstWinner;
+string secondWinner;
+string thirdWinner;
+
+int main()
+{
+	cout << "Hi, please enter you name! <ENTER>\n";
+	getline(cin, userName);
+	cout << "Hello " << userName << ", and welcome to the Pick A Winner Program!\n\n";
+	cout << "This program will take an array of names that you entered and pick a random winner!\n\n";
+	cout << "Please enter how many names you will be entering from 0 to 20! <ENTER>\n";
+
+	//Asks user how many students he/she will be entering to determine the array size
+	//If user enters 0, program exits assuming user did not want to enter any
+	int x;
+	while (!(cin >> x) || x < 0 || x > 20) {
+		cin.clear();
+		cin.ignore(1000000, '\n');
+		cout << "Please enter a valid amount! <ENTER>\n";
+	}
+	if (x == 0)
+	{
+		cout << "Thanks and have a great day!\n\n";
+		return 0;
+	}
+
+	//BONUS -- Creates DYNAMIC MEMORY ARRAY and constant int for array size
+
+	const int array_size = x;
+	vector<string> studentArray(array_size);
+
+	cin.clear();
+	cin.ignore(100000, '\n');
+
+	cout << "Please enter the students names! <ENTER>\n";
+
+	//Loop to as for user input of student names, will exit if black space is inputted
+	for (int i = 0; i < array_size; i++)
+	{
+		string name;
+		getline(cin, studentArray[i]);
+		if (studentArray[i] == " ")
+		{
+			return 0;
+		}
+	}
+
+	bool loopTest = true;
+	int counter = 0;
+	//Picks random numbers for 3 different winners
+	int randomNumber;
+	int randomNumber2;
+	int randomNumber3;
+	randomNumber = rand() % x;
+	randomNumber2 = rand() % x - 1;
+	randomNumber3 = rand() % x - 2;
+
+	//BONUS -- Removes the winners name and choose a new winner
+	while (loopTest)
+	{
+		if (counter == 0)
+		{
+			for (unsigned int j = 0; j < studentArray.size(); j++)
+			{
+				cout << "The first winner is... " << studentArray.at[&randomNumber] << "!!\n\n";
+				studentArray.erase(studentArray.begin() + randomNumber);
+			}
+		}
+		if (counter == 1)
+		{
+			for (unsigned int j = 0; j < studentArray.size(); j++)
+			{
+				studentArray.resize(array_size - 1);
+				cout << "The second winner is... " << studentArray.at[&randomNumber2] << "!!\n\n";
+				studentArray.erase(studentArray.begin() + randomNumber2);
+			}
+		}
+		if (counter == 2)
+		{
+			for (unsigned int j = 0; j < studentArray.size(); j++)
+			{
+				studentArray.resize(array_size - 1);
+				cout << "The third winner is... " << studentArray.at[&randomNumber3] << "!!\n\n";
+				studentArray.erase(studentArray.begin() + randomNumber3);
+			}
+		}
+		counter++;
+		if (counter == 3)
+		{
+			loopTest = false;
+		}
+	}
+
+	//Opens file for webpage and displays the winners there
+	ofstream myfile;
+	myfile.open("web.html");
+	myfile << "<!DOCTYPE html>" << endl;
+	myfile << "<html>" << endl;
+	myfile << "<body>" << endl;
+	myfile << "<h1>The Winners!</h1>" << endl;
+	myfile << "<p1>" << firstWinner << "<br><br>" << "</p1>" << endl;
+	myfile << "<p1>" << secondWinner << "<br><br>" << "</p1>" << endl;
+	myfile << "<p1>" << thirdWinner << "<br><br>" << "</p1>" << endl;
+	myfile << "</body>" << endl;
+	myfile << "</html>" << endl;
+	myfile.close();
+
+	cout << endl;
+
+	system("pause");
+	return 0;
+}
